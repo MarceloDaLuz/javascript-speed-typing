@@ -4,13 +4,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const quoteDisplayElement = document.getElementById('quote-display');
     const quoteInputElement = document.getElementById('quoteInput');
     const timerElement = document.getElementById('timer');
+
     let correctQuote = true;
+    let startTime;
+    function getTimerTime(){
+        return Math.floor((new Date() - startTime) / 1000);
+    };
+
+    function startTimer() {
+        timerElement.innerText = 0;
+        startTime = new Date();
+        setInterval(() => {
+            timer.innerText = getTimerTime();
+        }, 1000);
+
+    };
 
     async function getRandomQuote() {
         return fetch(RANDOM_QUOTE_API_URL)
             .then(res => res.json())
             .then(data => data.content);
-    }
+    };
 
     async function renderNextQuote(){
         const quote = await getRandomQuote();
@@ -22,8 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         quoteInputElement.value = null;
-    }
+        startTimer();
+    };
 
+    
 
     quoteInputElement.addEventListener('input', () => {
         const arrayQuote = quoteDisplayElement.querySelectorAll('span');
